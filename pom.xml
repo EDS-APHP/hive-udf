@@ -40,9 +40,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <apache.hadoop.version>2.7.0</apache.hadoop.version>
-        <apache.hbase.version>1.2.0</apache.hbase.version>
-        <apache.hive.version>1.1.0</apache.hive.version>
+        <apache.hadoop.version>2.7.3</apache.hadoop.version>
+        <apache.hbase.version>1.1.2</apache.hbase.version>
+        <apache.hive.version>1.2.1</apache.hive.version>
         <codehaus.jackson.version>1.8.8</codehaus.jackson.version>
     </properties>
 
