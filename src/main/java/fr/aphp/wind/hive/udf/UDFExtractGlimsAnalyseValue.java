@@ -37,6 +37,12 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
   private Pattern typeXmlPattern;
 
   private GlimsGptext gg;
+  private Pattern doubleRange;
+  private Pattern lowRange;
+  private Pattern lowRangeBis;
+  private Pattern highRange;
+  private Pattern highRangeBis;
+  private Pattern doubleRangeBis;
 
   /**
    *
@@ -74,15 +80,20 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
     outFieldNames.add("value_num_borne_calc");
     outFieldOIs.add(PrimitiveObjectInspectorFactory.javaStringObjectInspector);
 
-
-
     typeNumericPattern = Pattern.compile("^[<> ]*([-]?\\d{1,8}\\.?\\d{0,5}) ([^\\d]+)$");
     typeDatetimePattern = Pattern.compile("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4} [0-9]{2}:[0-9]{2}$");
     typeImagePattern = Pattern.compile("(?i)(?:\\.png$)|(?:\\.tif$)|(?:\\.bmp$)");
     typeDatePattern = Pattern.compile("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}$");
     typeHourPattern = Pattern.compile("^[0-9]{2}h[0-9]{2}min$");
     typeXmlPattern = Pattern.compile("<\\?xml");
-
+    
+    doubleRange = Pattern.compile("(-?[0-9]+\\.?[0-9]*)\\\\(-?[0-9]+\\.?[0-9]*)");
+    lowRange = Pattern.compile("^<[=]? (-?[0-9]+\\.?[0-9]*)");
+    lowRangeBis = Pattern.compile("(-?[0-9]+\\.?[0-9]*)\\\\");
+    highRange = Pattern.compile("^>[=]? (-?[0-9]+\\.?[0-9]*)");
+    highRangeBis = Pattern.compile("\\\\(-?[0-9]+\\.?[0-9]*)");
+    doubleRangeBis = Pattern.compile("(-?[0-9]+\\.?[0-9]*)- \\+?([0-9]+\\.?[0-9]*)");
+    
     gg = new GlimsGptext("glims_ref_gp_text.csv");
 
 
@@ -103,7 +114,6 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
 
 
   private String inferType(String value) {
-
     if (value == null) {
       return "text";
     }
@@ -142,7 +152,7 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
     }
 
 
-    String doubleRange = "(-?[0-9]+\\.?[0-9]*)\\\\(-?[0-9]+\\.?[0-9]*)";
+
     Matcher mdrange = getMatcher(doubleRange, range);
     if (mdrange.matches()) {
       lower = mdrange.group(1);
@@ -150,34 +160,32 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
       return prepareRange(lower, higher);
     }
 
-    String lowRange = "^<[=]? (-?[0-9]+\\.?[0-9]*)";
+    
     Matcher mlrange = getMatcher(lowRange, range);
     if (mlrange.matches()) {
       lower = mlrange.group(1);
       return prepareRange(lower, higher);
     }
 
-    String lowRangeBis = "(-?[0-9]+\\.?[0-9]*)\\\\";
     Matcher mlrangebis = getMatcher(lowRangeBis, range);
     if (mlrangebis.matches()) {
       higher = mlrangebis.group(1);
       return prepareRange(lower, higher);
     }
 
-    String highRange = "^>[=]? (-?[0-9]+\\.?[0-9]*)";
+
+
     Matcher mhrange = getMatcher(highRange, range);
     if (mhrange.matches()) {
       higher = mhrange.group(1);
       return prepareRange(lower, higher);
     }
 
-    String highRangeBis = "\\\\(-?[0-9]+\\.?[0-9]*)";
     Matcher mhrangebis = getMatcher(highRangeBis, range);
     if (mhrangebis.matches()) {
       lower = mhrangebis.group(1);
       return prepareRange(lower, higher);
     }
-    String doubleRangeBis = "(-?[0-9]+\\.?[0-9]*)- \\+?([0-9]+\\.?[0-9]*)";
     Matcher drangebis = getMatcher(doubleRangeBis, range);
     if (drangebis.matches()) {
       lower = drangebis.group(1);
@@ -201,8 +209,7 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
     return rst;
   }
 
-  private Matcher getMatcher(String pattern, String source) {
-    Pattern p = Pattern.compile(pattern);
+  private Matcher getMatcher(Pattern p, String source) {
     Matcher m = p.matcher(source);
     return m;
   }
