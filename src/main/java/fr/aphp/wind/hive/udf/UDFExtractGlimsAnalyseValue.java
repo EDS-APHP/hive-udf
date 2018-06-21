@@ -1,15 +1,9 @@
 package fr.aphp.wind.hive.udf;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.derby.impl.sql.catalog.SYSROUTINEPERMSRowFactory;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDTF;
@@ -19,8 +13,6 @@ import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.StringObjectInspector;
-import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
 
 public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
 
@@ -99,19 +91,6 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
 
     return ObjectInspectorFactory.getStandardStructObjectInspector(outFieldNames, outFieldOIs);
   }
-
-  public Reader getReader(String relativePath) {
-
-    try {
-
-      return new FileReader(relativePath);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-
-  }
-
-
 
   private String inferType(String value) {
     if (value == null) {
