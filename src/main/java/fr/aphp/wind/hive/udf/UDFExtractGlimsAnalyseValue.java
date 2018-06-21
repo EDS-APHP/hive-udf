@@ -183,8 +183,10 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
     if (previousBegin != s.length()) {
       ret.add(s.substring(previousBegin, s.length()));
     }
+    if(previousBegin==0)
+      return ret.get(0);
 
-    return String.join("", ret);
+    return populateGptext(String.join("", ret),source);
   }
 
   private String fetchGptext(Matcher match, String source) {

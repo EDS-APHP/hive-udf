@@ -312,4 +312,23 @@ public class UDFExtractGlimsAnalyseValueTest {
     assertEquals("hello COL11A1 world!", col4.extract(results.get(0)).asString());
   }
   
+  @Test
+  public void howToManageGptextRecurs() throws HiveException {
+    final String VALUE = "hello {<test_recursiv} world!";
+    final String RANGE = null;
+
+    final UDFExtractGlimsAnalyseValue sut = new UDFExtractGlimsAnalyseValue();
+    final StructObjectInspector oi =
+        sut.initialize(new ObjectInspector[] {toConstantOI(VALUE), toConstantOI(RANGE), toConstantOI("psl")});
+    assertEquals(this.STRUCT, oi.getTypeName());
+
+
+    final HivePath col1 = new HivePath(oi, ".value_type_calc");
+    final HivePath col4 = new HivePath(oi, ".value_text_calc");
+    final List<Object> results = evaluate(sut, toObject(VALUE), toObject(RANGE), toObject("psl"));
+
+    assertEquals(1, results.size());
+    assert ("gp_text".equals(col1.extract(results.get(0)).asString()));
+    assertEquals("hello hello\nworld world!", col4.extract(results.get(0)).asString());
+  }
 }
