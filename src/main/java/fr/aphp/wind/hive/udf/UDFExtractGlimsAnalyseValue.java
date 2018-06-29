@@ -35,6 +35,7 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
   private Pattern highRange;
   private Pattern highRangeBis;
   private Pattern doubleRangeBis;
+  private Pattern operatorPattern;
 
   /**
    *
@@ -72,11 +73,12 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
     outFieldNames.add("value_num_borne_calc");
     outFieldOIs.add(PrimitiveObjectInspectorFactory.javaStringObjectInspector);
 
-    typeNumericPattern = Pattern.compile("^[<> ]*([-]?\\d{1,8}\\.?\\d{0,5}) ([^\\d]+)$");
+
+    typeNumericPattern = Pattern.compile("^ *[<>]{0,1}[=]? *([-]?\\d{1,8}(?:\\.\\d{0,5})?)([^\\d]+.*)?$");
     typeDatetimePattern = Pattern.compile("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4} [0-9]{2}:[0-9]{2}$");
     typeImagePattern = Pattern.compile("(?i)(?:\\.png$)|(?:\\.tif$)|(?:\\.bmp$)");
     typeDatePattern = Pattern.compile("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}$");
-    typeHourPattern = Pattern.compile("^[0-9]{2}h[0-9]{2}min$");
+    typeHourPattern = Pattern.compile("^[0-9]{2}[h:][0-9]{2}min$");
     typeXmlPattern = Pattern.compile("<\\?xml");
     
     doubleRange = Pattern.compile("(-?[0-9]+\\.?[0-9]*)\\\\(-?[0-9]+\\.?[0-9]*)");
@@ -85,6 +87,7 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
     highRange = Pattern.compile("^>[=]? (-?[0-9]+\\.?[0-9]*)");
     highRangeBis = Pattern.compile("\\\\(-?[0-9]+\\.?[0-9]*)");
     doubleRangeBis = Pattern.compile("(-?[0-9]+\\.?[0-9]*)- \\+?([0-9]+\\.?[0-9]*)");
+    operatorPattern = Pattern.compile("^ *([<>]{0,1}[=]?) *");
     
     gg = new GlimsGptext("glims_ref_gp_text.csv");
 
@@ -259,13 +262,14 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
       value_text_calc = value;
     } else if ("numeric".equals(value_type_calc)) {
       String[] spl = explodeNumericValue(value);
-      value_num_calc = Double.parseDouble(spl[0]);
-      value_num_unit_calc = spl[1];
+      value_num_calc = spl[0]==null?null:Double.parseDouble(spl[0]);
+      value_num_unit_calc = spl[1]==null?null:spl[1].trim();
       Double[] rspl = explodeRange(range);
       value_num_borne_inf_calc = rspl[0];
       value_num_borne_sup_calc = rspl[1];
       value_num_borne_calc =
           getBorne(value_num_calc, value_num_borne_inf_calc, value_num_borne_sup_calc);
+      value_num_operator_calc = getOperator(value);
 
     } else if ("image".equals(value_type_calc)) {
       value_text_calc = value;
@@ -284,15 +288,34 @@ public class UDFExtractGlimsAnalyseValue extends GenericUDTF {
     forwardColObj[7] = value_num_borne_calc;
 
 
-
     // output a row with two column
     forward(forwardColObj);
   }
 
+  private String getOperator(String value) {
+    Matcher m = this.operatorPattern.matcher(value.trim());
+    if(m.find()) {
+      return m.group(1);
+    }
+    return "=";
+  }
+
   private String[] explodeNumericValue(String value) {
-    Matcher a = this.typeNumericPattern.matcher(value);
+    Matcher a = this.typeNumericPattern.matcher(value.trim());
     a.matches();
-    return new String[] {a.group(1), a.group(2)};
+    String valueRst = null;
+    String unitRst = null;
+    if(a.group(1)==null) {
+      valueRst = null;
+    }else {
+      valueRst = a.group(1);
+    }
+    if(a.group(2)==null) {
+      unitRst = null;
+    }else {
+      unitRst = a.group(2);
+    }
+    return new String[] {valueRst, unitRst};
 
   }
 

@@ -86,6 +86,73 @@ public class UDFExtractGlimsAnalyseValueTest {
   }
   
   @Test
+  public void howToManageNumericOperator() throws HiveException {
+    final String VALUE = ">= 9.9 mg/L";
+    final String RANGE = "32.0\\36.0";
+
+    final UDFExtractGlimsAnalyseValue sut = new UDFExtractGlimsAnalyseValue();
+    final StructObjectInspector oi =
+        sut.initialize(new ObjectInspector[] {toConstantOI(VALUE), toConstantOI(RANGE), toConstantOI("apr")});
+    assertEquals(
+        this.STRUCT,
+        oi.getTypeName());
+
+
+    final HivePath col1 = new HivePath(oi, ".value_type_calc");
+    final HivePath col2 = new HivePath(oi, ".value_num_calc");
+    final HivePath col3 = new HivePath(oi, ".value_num_unit_calc");
+    final HivePath col4 = new HivePath(oi, ".value_num_borne_inf_calc");
+    final HivePath col5 = new HivePath(oi, ".value_num_borne_sup_calc");
+    final HivePath col6 = new HivePath(oi, ".value_num_borne_calc");
+    final HivePath col7 = new HivePath(oi, ".value_num_operator_calc");
+    final List<Object> results = evaluate(sut, toObject(VALUE),toObject(RANGE),toObject("apr"));
+
+    assertEquals(1, results.size());
+    assert ("numeric".equals(col1.extract(results.get(0)).asString()));
+    assert (9.9 == col2.extract(results.get(0)).asDouble());
+    assertEquals("mg/L", col3.extract(results.get(0)).asString());
+    assertEquals(32.0, col4.extract(results.get(0)).asDouble(),0);
+    assertEquals(36.0, col5.extract(results.get(0)).asDouble(),0);
+    assertEquals("L", col6.extract(results.get(0)).asString());
+    assertEquals(">=", col7.extract(results.get(0)).asString());
+    
+
+  }
+  
+  @Test
+  public void howToManageNumericOperator2() throws HiveException {
+    final String VALUE = ">=   9.9 mg/L";
+    final String RANGE = "32.0\\36.0";
+
+    final UDFExtractGlimsAnalyseValue sut = new UDFExtractGlimsAnalyseValue();
+    final StructObjectInspector oi =
+        sut.initialize(new ObjectInspector[] {toConstantOI(VALUE), toConstantOI(RANGE), toConstantOI("apr")});
+    assertEquals(
+        this.STRUCT,
+        oi.getTypeName());
+
+
+    final HivePath col1 = new HivePath(oi, ".value_type_calc");
+    final HivePath col2 = new HivePath(oi, ".value_num_calc");
+    final HivePath col3 = new HivePath(oi, ".value_num_unit_calc");
+    final HivePath col4 = new HivePath(oi, ".value_num_borne_inf_calc");
+    final HivePath col5 = new HivePath(oi, ".value_num_borne_sup_calc");
+    final HivePath col6 = new HivePath(oi, ".value_num_borne_calc");
+    final HivePath col7 = new HivePath(oi, ".value_num_operator_calc");
+    final List<Object> results = evaluate(sut, toObject(VALUE),toObject(RANGE),toObject("apr"));
+
+    assertEquals(1, results.size());
+    assert ("numeric".equals(col1.extract(results.get(0)).asString()));
+    assert (9.9 == col2.extract(results.get(0)).asDouble());
+    assertEquals("mg/L", col3.extract(results.get(0)).asString());
+    assertEquals(32.0, col4.extract(results.get(0)).asDouble(),0);
+    assertEquals(36.0, col5.extract(results.get(0)).asDouble(),0);
+    assertEquals("L", col6.extract(results.get(0)).asString());
+    assertEquals(">=", col7.extract(results.get(0)).asString());
+    
+
+  }
+  @Test
   public void shouldReturnHigh() throws HiveException {
     final String VALUE = "40 mg/L";
     final String RANGE = "32.0\\36.0";
@@ -141,7 +208,7 @@ public class UDFExtractGlimsAnalyseValueTest {
   
   @Test
   public void shouldReturnNormToo() throws HiveException {
-    final String VALUE = "32";
+    final String VALUE = "33.0";
     final String RANGE = ">= 32.0";
 
     final UDFExtractGlimsAnalyseValue sut = new UDFExtractGlimsAnalyseValue();
@@ -152,10 +219,62 @@ public class UDFExtractGlimsAnalyseValueTest {
         oi.getTypeName());
 
     final HivePath col6 = new HivePath(oi, ".value_num_borne_calc");
+    final HivePath col8 = new HivePath(oi, ".value_num_calc");
+    final HivePath col7 = new HivePath(oi, ".value_type_calc");
     final List<Object> results = evaluate(sut, toObject(VALUE),toObject(RANGE),toObject("apr"));
 
-    assertEquals(null, col6.extract(results.get(0)).asString());
+    
+    assertEquals("numeric", col7.extract(results.get(0)).asString());
+    assertEquals(33.0, col8.extract(results.get(0)).asDouble(),0);
+
+   assertEquals("@", col6.extract(results.get(0)).asString());
   }
+  
+  @Test
+  public void shouldReturnText() throws HiveException {
+    final String VALUE = "381280000.0090";
+    final String RANGE = ">= 32.0";
+
+    final UDFExtractGlimsAnalyseValue sut = new UDFExtractGlimsAnalyseValue();
+    final StructObjectInspector oi =
+        sut.initialize(new ObjectInspector[] {toConstantOI(VALUE), toConstantOI(RANGE), toConstantOI("apr")});
+    assertEquals(
+        this.STRUCT,
+        oi.getTypeName());
+
+    final HivePath col6 = new HivePath(oi, ".value_num_borne_calc");
+    final HivePath col8 = new HivePath(oi, ".value_num_calc");
+    final HivePath col7 = new HivePath(oi, ".value_type_calc");
+    final List<Object> results = evaluate(sut, toObject(VALUE),toObject(RANGE),toObject("apr"));
+
+    
+    assertEquals("text", col7.extract(results.get(0)).asString());
+
+  }
+  
+  @Test
+  public void shouldReturnDoubleNegative() throws HiveException {
+    final String VALUE = "-5.45";
+    final String RANGE = ">= 32.0";
+
+    final UDFExtractGlimsAnalyseValue sut = new UDFExtractGlimsAnalyseValue();
+    final StructObjectInspector oi =
+        sut.initialize(new ObjectInspector[] {toConstantOI(VALUE), toConstantOI(RANGE), toConstantOI("apr")});
+    assertEquals(
+        this.STRUCT,
+        oi.getTypeName());
+
+    final HivePath col6 = new HivePath(oi, ".value_num_borne_calc");
+    final HivePath col8 = new HivePath(oi, ".value_num_calc");
+    final HivePath col7 = new HivePath(oi, ".value_type_calc");
+    final List<Object> results = evaluate(sut, toObject(VALUE),toObject(RANGE),toObject("apr"));
+
+    
+    assertEquals("numeric", col7.extract(results.get(0)).asString());
+    assertEquals(-5.45, col8.extract(results.get(0)).asDouble(),0);
+
+  }
+  
   @Test
   public void shouldReturnVoid() throws HiveException {
     final String VALUE = "32 mg/L";
