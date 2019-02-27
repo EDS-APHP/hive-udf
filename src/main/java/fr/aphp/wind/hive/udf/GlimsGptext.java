@@ -17,7 +17,7 @@ public class GlimsGptext {
   public GlimsGptext(String path) {
     map = new HashMap<String, String>();
     generateMap(path);
-    typeGptextPattern = Pattern.compile("\\{<[\\+]?([\\w_]+?)\\}");
+    typeGptextPattern = Pattern.compile("\\{ ?<?[\\+]?([\\w_]+?) ?\\}");
   }
 
   private void generateMap(String path) {
