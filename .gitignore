@@ -6,3 +6,6 @@
 .settings/
 target/
 *.class
+glims_ref_gp_text.csv
+udf.zip
+
