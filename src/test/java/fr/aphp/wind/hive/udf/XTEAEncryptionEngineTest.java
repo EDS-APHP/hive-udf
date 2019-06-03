@@ -34,8 +34,8 @@ public class XTEAEncryptionEngineTest {
 
 		for (int i = 0; i <= 10; i++) {
 			int expected = random.nextInt();
-			long encrypted = XTEAEncryptionEngine.encrypt(expected, Key);
-			int actual = XTEAEncryptionEngine.decrypt(encrypted,Key);
+			long encrypted = XTEAEncryptionEngine.evaluate(expected, Key);
+			int actual = XTEADecryptionEngine.evaluate(encrypted,Key);
 			assertEquals(expected, actual);
 		}
 
@@ -49,8 +49,8 @@ public class XTEAEncryptionEngineTest {
 
 		for (int i = 0; i < 1000000; i++) {
 			input = (int) (Math.random() * 2147483647);
-			long output = XTEAEncryptionEngine.encrypt(input, Key);
-			int input2 = XTEAEncryptionEngine.decrypt(output,Key);
+			long output = XTEAEncryptionEngine.evaluate(input, Key);
+			int input2 = XTEADecryptionEngine.evaluate(output,Key);
 			assertEquals(input, input2);
 		}
 
