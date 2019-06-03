@@ -93,10 +93,10 @@ public class UDFSplitKeepList extends UDF {
 	}
 
 	/**
-	 * This methods checks if the regular expression is in a group, it checks for
+	 * This methods checks if the regular expression respects the syntax of a group, it checks for
 	 * the left and the right brackets
 	 * 
-	 * @param regexIn the regular expression à contrôler
+	 * @param regexIn the regular expression to check
 	 * @return true/false
 	 */
 	public boolean isValidRegexGroup(String regexIn) {

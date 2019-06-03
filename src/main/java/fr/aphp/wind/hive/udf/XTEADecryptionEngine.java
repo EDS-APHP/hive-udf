@@ -17,9 +17,8 @@ import org.apache.hadoop.hive.ql.exec.UDF;
  * @author jiddo
  *
  */
-
-@Description(name = "encrypt", value = "long _FUNC_(int, string) - encodes the parameter the value long with the key (String)")
-public class XTEAEncryptionEngine extends UDF {
+@Description(name = "decrypt", value = "int _FUNC_(long, string) - encodes the parameter the value long with the key (String)")
+public class XTEADecryptionEngine extends UDF {
 	public final static int rounds = 32, keySize = 16, blockSize = 8;
 
 	private final static int delta = 0x9e3779b9, decryptSum = 0xc6ef3720;
@@ -241,27 +240,19 @@ public class XTEAEncryptionEngine extends UDF {
 		out.write((byte) (0xff & (v >> 24)));
 	}
 
-	/**
-	 * 
-	 * @param input
-	 * @return
-	 * @throws InvalidKeyException
-	 * @throws IOException
-	 */
-	public static long evaluate(int input, String Key) throws InvalidKeyException, IOException {
-		XTEAEncryptionEngine XT = new XTEAEncryptionEngine();
-
-		// String Key = "nxovsqnowwtdqbei";
-
+	
+	
+	public static int evaluate(long input, String Key) throws InvalidKeyException, IOException {
+		XTEADecryptionEngine XT = new XTEADecryptionEngine();
+		//String Key = "nxovsqnowwtdqbei";
 		byte[] keyByte = Key.getBytes();
 
 		XT.init(keyByte);
-		ByteArrayOutputStream codeStr = new ByteArrayOutputStream();
-		XTEAEncryptionEngine.writeInt(codeStr, input);
-		byte[] in = codeStr.toByteArray();
-		byte[] out = XT.encrypt(in);
-		return ByteBuffer.wrap(out).getLong();
 
+		byte[] inputByte = ByteBuffer.allocate(64).putLong(input).array();
+		byte[] in2 = XT.decrypt(inputByte);
+
+		return XTEADecryptionEngine.readInt(new ByteArrayInputStream(in2));
 	}
 
 }
