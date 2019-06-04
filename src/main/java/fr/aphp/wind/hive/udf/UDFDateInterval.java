@@ -16,7 +16,7 @@ package fr.aphp.wind.hive.udf;
  *
  **/
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import org.apache.commons.math3.util.Precision;
 import org.apache.hadoop.hive.ql.exec.Description;
@@ -52,7 +52,7 @@ public class UDFDateInterval extends UDF {
 	 *                calculate days including the time
 	 * @return - difference between 2 dates according to the unit parameter
 	 */
-		public Double evaluate(Date d8Start, Date d8End, DateEnum unit) {
+		public Double evaluate(Timestamp d8Start, Timestamp d8End, String unit) {
 
 		if (d8Start == null || d8End == null) {
 			return null;
@@ -63,7 +63,7 @@ public class UDFDateInterval extends UDF {
 
 		switch (unit) {
 
-		case DATE_DIFF_YEAR: {
+		case "DATE_DIFF_YEAR": {
 			DateTime _d8End = new DateTime(d8End);
 			DateTime _d8Start = new DateTime(d8Start);
 			Period period;
@@ -73,7 +73,7 @@ public class UDFDateInterval extends UDF {
 			return Precision.round((Double) (years + (Double) (month / 12.0)), 1);
 		}
 		
-		case DATE_DIFF_DAYS: {
+		case "DATE_DIFF_DAYS": {
 			try {
 				DateTime d8EndP = new DateTime(d8End);
 				DateTime d8StartP = new DateTime(d8Start);

@@ -23,12 +23,12 @@ public class UDFDateIntervalTest {
 	@Test
 	public void testGetDateDiffYearOk() {
 
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-		String dateEndString = "2019-05-15";
+		String dateEndString = "2019-05-15 00:00:00";
 		Date d8End = new Date();
 
-		String dateStartString = "2010-01-01";
+		String dateStartString = "2010-01-01 00:00:00";
 		Date d8Start = new Date();
 
 		try {
@@ -38,7 +38,7 @@ public class UDFDateIntervalTest {
 			e.printStackTrace();
 		} // Handle the ParseException e ParseException here
 
-		Double actual = udf.evaluate(d8Start, d8End, DateEnum.DATE_DIFF_YEAR);
+		Double actual = udf.evaluate(new java.sql.Timestamp(d8Start.getTime()), new java.sql.Timestamp(d8End.getTime()), "DATE_DIFF_YEAR");
 		Double expected = new Double(9.3);
 		Assert.assertEquals(expected, actual);
 
@@ -49,10 +49,10 @@ public class UDFDateIntervalTest {
 
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		String dateEndString = "2019-05-15";
+		String dateEndString = "2019-05-15 00:00:00";
 		Date d8End = new Date();
 
-		String dateStartString = "2010-01-01";
+		String dateStartString = "2010-01-01 00:00:00";
 		Date d8Start = new Date();
 
 		try {
@@ -62,7 +62,7 @@ public class UDFDateIntervalTest {
 			e.printStackTrace();
 		} // Handle the ParseException e ParseException here
 
-		Double actual = udf.evaluate(d8Start, null, DateEnum.DATE_DIFF_YEAR);
+		Double actual = udf.evaluate(new java.sql.Timestamp(d8Start.getTime()), null, "DATE_DIFF_YEAR");
 		Double expected = new Double(9.3);
 		Assert.assertNull("the return value is null", actual);
 	}
@@ -72,10 +72,10 @@ public class UDFDateIntervalTest {
 
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		String dateEndString = "2019-17-45";
+		String dateEndString = "2019-17-45 00:00:00";
 		Date d8End = new Date();
 
-		String dateStartString = "2010-01-01";
+		String dateStartString = "2010-01-01 00:00:00";
 		Date d8Start = new Date();
 
 		try {
@@ -90,7 +90,7 @@ public class UDFDateIntervalTest {
 		// System.out.println("the month:" + d8EndToda.getMonthOfYear());
 		// System.out.println("the day:" + d8EndToda.getDayOfMonth());
 
-		Double actual = udf.evaluate(d8Start, d8End, DateEnum.DATE_DIFF_YEAR);
+		Double actual = udf.evaluate(new java.sql.Timestamp(d8Start.getTime()), new java.sql.Timestamp(d8End.getTime()), "DATE_DIFF_YEAR");
 		Double expected = new Double(10.4);
 		Assert.assertEquals(expected, actual);
 	}
@@ -114,7 +114,7 @@ public class UDFDateIntervalTest {
 		}
 		// Handle the ParseException e ParseException here
 
-		Double actual = udf.evaluate(d8Start, d8End, DateEnum.DATE_DIFF_DAYS);
+		Double actual = udf.evaluate(new java.sql.Timestamp(d8Start.getTime()), new java.sql.Timestamp(d8End.getTime()), "DATE_DIFF_DAYS");
 		Double expected = new Double(5.04);
 		Assert.assertEquals(expected, actual);
 	}
