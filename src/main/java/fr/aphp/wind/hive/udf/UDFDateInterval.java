@@ -16,8 +16,7 @@ package fr.aphp.wind.hive.udf;
  *
  **/
 
-import java.sql.Timestamp;
-
+import org.apache.hadoop.hive.common.type.Timestamp;
 import org.apache.commons.math3.util.Precision;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDF;
@@ -64,8 +63,8 @@ public class UDFDateInterval extends UDF {
 		switch (unit) {
 
 		case "DATE_DIFF_YEAR": {
-			DateTime _d8End = new DateTime(d8End);
-			DateTime _d8Start = new DateTime(d8Start);
+			DateTime _d8End = new DateTime(d8End.toEpochMilli());
+			DateTime _d8Start = new DateTime(d8Start.toEpochMilli());
 			Period period;
 			period = new Period(_d8Start, _d8End);
 			int years = period.getYears();
@@ -75,8 +74,8 @@ public class UDFDateInterval extends UDF {
 		
 		case "DATE_DIFF_DAYS": {
 			try {
-				DateTime d8EndP = new DateTime(d8End);
-				DateTime d8StartP = new DateTime(d8Start);
+				DateTime d8EndP = new DateTime(d8End.toEpochMilli());
+				DateTime d8StartP = new DateTime(d8Start.toEpochMilli());
 
 				Duration duration = new Duration(d8StartP, d8EndP);
 				return Precision.round(((Long) duration.getStandardSeconds()).doubleValue() / (24*60*60), 2);
