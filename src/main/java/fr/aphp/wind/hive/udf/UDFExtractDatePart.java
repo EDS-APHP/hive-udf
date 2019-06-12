@@ -16,8 +16,7 @@ package fr.aphp.wind.hive.udf;
  *
  **/
 
-import java.util.Date;
-
+import org.apache.hadoop.hive.common.type.Timestamp;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDF;
 import org.apache.log4j.Logger;
@@ -45,31 +44,29 @@ public class UDFExtractDatePart extends UDF {
 	 * @return - date part year, month,day,hour,minute,second 
 	 */
 	
-	public Integer evaluate(Date dt, DateEnum datePart) {
+	public Integer evaluate(Timestamp dt, String datePart) {
 
 		if (dt == null || datePart == null)
 			return null;
 
-		DateTime _dt = new DateTime(dt);
-
+		DateTime _dt = new DateTime(dt.toEpochMilli());
+		
 		switch (datePart) {
 
-		case HOUR_ONLY:
+		case "HOUR_ONLY":
 			return _dt.getHourOfDay();
-		case MINUTES_ONLY:
+		case "MINUTES_ONLY":
 			return _dt.getMinuteOfDay();
-		case SECONDS_ONLY:
+		case "SECONDS_ONLY":
 			return _dt.getSecondOfDay();
-		case YEAR_ONLY:
+		case "YEAR_ONLY":
 			return _dt.getYear();
-		case DATE_ONLY:
+		case "DATE_ONLY":
 			return null;
-		case DAY_ONLY:
+		case "DAY_ONLY":
 			return _dt.getDayOfMonth();
-		case MONTH_ONLY:
+		case "MONTH_ONLY":
 			return _dt.getMonthOfYear();
-		case TIME_ONLY:
-			return null;
 		default:
 			return null;
 		}

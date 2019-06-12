@@ -18,6 +18,7 @@ package fr.aphp.wind.hive.udf;
 
 import java.util.Date;
 
+import org.apache.hadoop.hive.common.type.Timestamp;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDF;
 import org.apache.log4j.Logger;
@@ -48,12 +49,12 @@ public class UDFDateIntervalWithoutTime extends UDF {
 	 * @return - l'interval en nombre de jours entre d8Start et d8End
 	 */
 
-	public Integer evaluate(Date d8Start, Date d8End, DateEnum unit) {
+	public Integer evaluate(Timestamp d8Start, Timestamp d8End, String unit) {
 		if (d8Start == null)
 			return null;
 
-		DateTime _d8End = new DateTime(d8End);
-		DateTime _d8Start = new DateTime(d8Start);
+		DateTime _d8End = new DateTime(d8End.toEpochMilli());
+		DateTime _d8Start = new DateTime(d8Start.toEpochMilli());
 
 		Period ageCourJour = new Period(_d8Start, _d8End);
 		DateTime zero = new DateTime(0);
@@ -62,16 +63,16 @@ public class UDFDateIntervalWithoutTime extends UDF {
 
 		switch (unit) {
 
-		case DATE_DIFF_DAYS:
+		case "DATE_DIFF_DAYS":
 			tmp = ageCourJour.toDurationFrom(zero).getStandardDays();
 			//return ageCourJour.getDays();
 			return tmp.intValue();
 
-		case DATE_DIFF_YEAR: {
+		case "DATE_DIFF_YEAR": {
 			return ageCourJour.getYears();
 
 		}
-		case DATE_DIFF_MONTH: {
+		case "DATE_DIFF_MONTH": {
 			tmp = ageCourJour.toDurationFrom(zero).getStandardDays();
 			return ageCourJour.getMonths();
 		}

@@ -146,4 +146,66 @@ public class UDFDateIntervalTest {
 		Assert.assertEquals(expected, actual);
 	}
 
+	
+	@Test
+	public void testGetDateDiffYearOkTimestamp() {
+
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+		String dateEndString = "2019-06-07 15:43:18.56";
+		Date d8End = new Date();
+
+		String dateStartString = "2018-06-20 17:25:52.00";
+		Date d8Start = new Date();
+
+		try {
+			d8Start = sdf.parse(dateStartString);
+			d8End = sdf.parse(dateEndString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} // Handle the ParseException e ParseException here
+
+		Timestamp d8StartTimeStamp = new Timestamp();
+		d8StartTimeStamp.setTimeInMillis(d8Start.getTime());
+		
+		Timestamp d8EndTimeStamp = new Timestamp();
+		d8EndTimeStamp.setTimeInMillis(d8End.getTime());
+		
+		
+		Double actual = udf.evaluate(d8StartTimeStamp, d8EndTimeStamp,"DATE_DIFF_YEAR");
+		Double expected = new Double(0.9);
+		Assert.assertEquals(expected, actual);
+
+	}
+	
+	@Test
+	public void testGetDateDiffDaysOkTimestamp() {
+
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+		String dateEndString = "2019-06-07 15:43:18.56";
+		Date d8End = new Date();
+
+		String dateStartString = "2018-06-20 17:25:52.00";
+		Date d8Start = new Date();
+
+		try {
+			d8Start = sdf.parse(dateStartString);
+			d8End = sdf.parse(dateEndString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} // Handle the ParseException e ParseException here
+
+		Timestamp d8StartTimeStamp = new Timestamp();
+		d8StartTimeStamp.setTimeInMillis(d8Start.getTime());
+		
+		Timestamp d8EndTimeStamp = new Timestamp();
+		d8EndTimeStamp.setTimeInMillis(d8End.getTime());
+		
+		
+		Double actual = udf.evaluate(d8StartTimeStamp, d8EndTimeStamp,"DATE_DIFF_DAYS");
+		Double expected = new Double(351.93);
+		Assert.assertEquals(expected, actual);
+
+	}
 }

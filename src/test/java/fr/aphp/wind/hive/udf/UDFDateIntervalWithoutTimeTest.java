@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.hadoop.hive.common.type.Timestamp;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,7 +38,14 @@ public class UDFDateIntervalWithoutTimeTest {
 			e.printStackTrace();
 		} // Handle the ParseException here
 
-		Integer actual = udf.evaluate(d8Start, d8End, DateEnum.DATE_DIFF_DAYS);
+		
+		Timestamp d8StartTimeStamp = new Timestamp();
+		d8StartTimeStamp.setTimeInMillis(d8Start.getTime());
+		
+		Timestamp d8EndTimeStamp = new Timestamp();
+		d8EndTimeStamp.setTimeInMillis(d8End.getTime());
+		
+		Integer actual = udf.evaluate(d8StartTimeStamp, d8EndTimeStamp, "DATE_DIFF_DAYS");
 		Integer expected = new Integer(14);
 		Assert.assertEquals(expected, actual);
 	}
@@ -59,7 +67,13 @@ public class UDFDateIntervalWithoutTimeTest {
 			e.printStackTrace();
 		} // Handle the ParseException here
 
-		Integer actual = udf.evaluate(d8Start, d8End, DateEnum.DATE_DIFF_YEAR);
+		Timestamp d8StartTimeStamp = new Timestamp();
+		d8StartTimeStamp.setTimeInMillis(d8Start.getTime());
+		
+		Timestamp d8EndTimeStamp = new Timestamp();
+		d8EndTimeStamp.setTimeInMillis(d8End.getTime());
+		
+		Integer actual = udf.evaluate(d8StartTimeStamp, d8EndTimeStamp, "DATE_DIFF_YEAR");
 		Integer expected = new Integer(5);
 		Assert.assertEquals(expected, actual);
 	}
@@ -84,7 +98,13 @@ public class UDFDateIntervalWithoutTimeTest {
 			e.printStackTrace();
 		} // Handle the ParseException here
 
-		Integer actual = udf.evaluate(d8Start, d8End, DateEnum.DATE_DIFF_MONTH);
+		Timestamp d8StartTimeStamp = new Timestamp();
+		d8StartTimeStamp.setTimeInMillis(d8Start.getTime());
+		
+		Timestamp d8EndTimeStamp = new Timestamp();
+		d8EndTimeStamp.setTimeInMillis(d8End.getTime());	
+		
+		Integer actual = udf.evaluate(d8StartTimeStamp, d8EndTimeStamp, "DATE_DIFF_MONTH");
 		Integer expected = new Integer(4);
 		Assert.assertEquals(expected, actual);
 	}

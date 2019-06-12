@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.hadoop.hive.common.type.Timestamp;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +36,10 @@ public class UDFExtractDatePartTest {
 			e.printStackTrace();
 		} // Handle the ParseException here
 
-		Integer actual = udf.evaluate(d8Parameter, DateEnum.HOUR_ONLY);
+		Timestamp d8ParameterTimeStamp = new Timestamp();
+		d8ParameterTimeStamp.setTimeInMillis(d8Parameter.getTime());
+		
+		Integer actual = udf.evaluate(d8ParameterTimeStamp, "HOUR_ONLY");
 		Integer expected = new Integer(12);
 		Assert.assertEquals(expected, actual);
 	}
