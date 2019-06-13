@@ -33,9 +33,9 @@ import org.joda.time.Period;
 
 @Description(name = "geDateDiffWithoutTime", value = " The date difference without time" 
 ,extended = "Example:\n" +
-        "    SELECT _FUNC_(dateDebNda, dateFinNda, DateEnum.DATE_DIFF_YEAR) FROM patient;\n" +
-		
-"    SELECT _FUNC_(dateDebNda, dateFinNda, DateEnum.DATE_DIFF_DAYS) FROM patient;\n") 
+        "    SELECT _FUNC_(dateDebNda, dateFinNda, DATE_DIFF_YEAR) FROM patient;\n" +
+		"    SELECT _FUNC_(dateDebNda, dateFinNda, DATE_DIFF_DAYS) FROM patient;\n + "
++ "the paramaeter unit takes the values DATE_DIFF_DAYS, DATE_DIFF_YEAR, DATE_DIFF_MONTH") 
 public class UDFDateIntervalWithoutTime extends UDF {
 
 	private static final Logger LOG = Logger.getLogger(UDFDateIntervalWithoutTime.class);

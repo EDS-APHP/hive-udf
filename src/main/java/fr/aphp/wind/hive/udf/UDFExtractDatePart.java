@@ -31,7 +31,8 @@ import org.joda.time.DateTime;
 ,extended = "Example:\n" +
         "    SELECT _FUNC_(dateDebNda, DateEnum.HOUR_ONLY) FROM patient;\n" +
 		
-"    SELECT _FUNC_(dateDebNda, DateEnum.MINUTES_ONLY) FROM patient;\n") 
+"    SELECT _FUNC_(dateDebNda, DateEnum.MINUTES_ONLY) FROM patient;\n"
++ "the parameter unit takes the values HOUR_ONLY, MINUTES_ONLY, SECONDS_ONLY, YEAR_ONLY,DATE_ONLY,DAY_ONLY,MONTH_ONLY") 
 public class UDFExtractDatePart extends UDF {
 
 	private static final Logger LOG = Logger.getLogger(UDFExtractDatePart.class);

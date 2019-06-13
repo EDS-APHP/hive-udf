@@ -26,7 +26,8 @@ public class UDFSplitKeepList extends UDF {
 
 		for (String regex : listRegex) {
 			if (!isValidRegexGroup(regex)) {
-				throw new UDFArgumentException("Missing brackets, regex is not a group:" + regex);
+				//throw new UDFArgumentException("Missing brackets, regex is not a group:" + regex);
+				throw new UDFArgumentException();
 			} else {
 				Pattern p = null;
 				try {

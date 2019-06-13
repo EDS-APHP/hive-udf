@@ -47,7 +47,7 @@ public class UDFDateInterval extends UDF {
 	 * 
 	 * @param d8Start - start date
 	 * @param d8End   - end date
-	 * @param unit    - the unit parameter "Y":to calculate year and "D" to
+	 * @param unit    - the unit parameter "DATE_DIFF_YEAR":to calculate year and "DATE_DIFF_DAYS" to
 	 *                calculate days including the time
 	 * @return - difference between 2 dates according to the unit parameter
 	 */
