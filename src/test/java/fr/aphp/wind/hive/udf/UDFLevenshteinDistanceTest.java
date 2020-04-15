@@ -15,9 +15,9 @@ public class UDFLevenshteinDistanceTest {
     }
 
     @Test
-    public void computeDistance(){
+    public void computeDistance() {
         String c1 = "azerty";
-        Assert.assertEquals((double) 0,udf.evaluate(c1,c1));
-        Assert.assertEquals((double) c1.length(),udf.evaluate(c1,c1.concat(c1)));
+        Assert.assertEquals((double) 0, udf.evaluate(c1, c1));
+        Assert.assertEquals((double) c1.length(), udf.evaluate(c1, c1.concat(c1)));
     }
 }
