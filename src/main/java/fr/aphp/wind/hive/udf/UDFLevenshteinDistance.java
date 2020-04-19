@@ -22,8 +22,6 @@ public class UDFLevenshteinDistance extends GenericUDF {
     @Override
     public ObjectInspector initialize(ObjectInspector[] args) throws UDFArgumentException {
 
-        stringDistance = new StringDistance();
-
         boolean areInputsAsString = true;
         //Check that we receive 2 arguments
         if (args.length != 2) {
@@ -42,6 +40,8 @@ public class UDFLevenshteinDistance extends GenericUDF {
         if (!areInputsAsString) {
             throw new UDFArgumentException(" Expecting all arguments to be String ");
         }
+
+        stringDistance = new StringDistance();
 
         outputObj = PrimitiveObjectInspectorFactory.writableDoubleObjectInspector;
         return outputObj;
