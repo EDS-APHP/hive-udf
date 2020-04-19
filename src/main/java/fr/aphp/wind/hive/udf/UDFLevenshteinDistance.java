@@ -19,7 +19,6 @@ public class UDFLevenshteinDistance extends GenericUDF {
     private PrimitiveObjectInspector inputsObj;
     private PrimitiveObjectInspector outputObj;
 
-
     @Override
     public ObjectInspector initialize(ObjectInspector[] args) throws UDFArgumentException {
 
@@ -48,6 +47,9 @@ public class UDFLevenshteinDistance extends GenericUDF {
         return outputObj;
     }
 
+    /**
+     * Calculates the Levenshtein distance between 2 strings
+     */
     @Override
     public Object evaluate(DeferredObject[] args) throws HiveException {
 
@@ -65,15 +67,8 @@ public class UDFLevenshteinDistance extends GenericUDF {
 
     @Override
     public String getDisplayString(String[] children) {
-        return "return_double = levenshtein_distance( '"+children[0]+"' , '"+children[1]+"' )";
+        return "double levenshtein_distance( '" + children[0] + "' , '" + children[1] + "' )";
     }
-
-    /**
-     * Calculates the Levenshtein distance between 2 strings
-     */
-//    public double evaluate(String c1, String c2){
-//        return stringDistance.distance(c1,c2);
-//    }
 
     private class StringDistance {
         WeightedLevenshtein distKernel;
