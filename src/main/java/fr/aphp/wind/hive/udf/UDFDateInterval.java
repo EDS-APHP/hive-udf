@@ -16,7 +16,8 @@ package fr.aphp.wind.hive.udf;
  *
  **/
 
-import org.apache.hadoop.hive.common.type.Timestamp;
+import java.sql.Timestamp;
+import java.sql.Date;
 import org.apache.commons.math3.util.Precision;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDF;
@@ -51,44 +52,45 @@ public class UDFDateInterval extends UDF {
 	 *                calculate days including the time
 	 * @return - difference between 2 dates according to the unit parameter
 	 */
-		public Double evaluate(Timestamp d8Start, Timestamp d8End, String unit) {
+		public Date evaluate(Timestamp d8Start, Timestamp d8End, String unit) {
 
 		if (d8Start == null || d8End == null) {
 			return null;
 		}
+		return new Date(d8Start.getTime());
 		// get difference between two dates as years including the months as a fraction
 		// of
 		// year
 
-		switch (unit) {
+		// switch (unit) {
 
-		case "DATE_DIFF_YEAR": {
-			DateTime _d8End = new DateTime(d8End.toEpochMilli());
-			DateTime _d8Start = new DateTime(d8Start.toEpochMilli());
-			Period period;
-			period = new Period(_d8Start, _d8End);
-			int years = period.getYears();
-			int month = period.getMonths();
-			return Precision.round((Double) (years + (Double) (month / 12.0)), 1);
-		}
-		
-		case "DATE_DIFF_DAYS": {
-			try {
-				DateTime d8EndP = new DateTime(d8End.toEpochMilli());
-				DateTime d8StartP = new DateTime(d8Start.toEpochMilli());
+		// case "DATE_DIFF_YEAR": {
+		// 	DateTime _d8End = new DateTime(d8End.getTime());
+		// 	DateTime _d8Start = new DateTime(d8Start.getTime());
+		// 	Period period;
+		// 	period = new Period(_d8Start, _d8End);
+		// 	int years = period.getYears();
+		// 	int month = period.getMonths();
+		// 	return Precision.round((Double) (years + (Double) (month / 12.0)), 1);
+		// }
+		//
+		// case "DATE_DIFF_DAYS": {
+		// 	try {
+		// 		DateTime d8EndP = new DateTime(d8End.getTime());
+		// 		DateTime d8StartP = new DateTime(d8Start.getTime());
 
-				Duration duration = new Duration(d8StartP, d8EndP);
-				return Precision.round(((Long) duration.getStandardSeconds()).doubleValue() / (24*60*60), 2);
+		// 		Duration duration = new Duration(d8StartP, d8EndP);
+		// 		return Precision.round(((Long) duration.getStandardSeconds()).doubleValue() / (24*60*60), 2);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
+		// 	} catch (Exception e) {
+		// 		e.printStackTrace();
+		// 		return null;
+		// 	}
+		// }
 
-		default:
-			return null;
-		}
+		// default:
+		// 	return null;
+		//}
 
 	}
 
